@@ -53,28 +53,14 @@ const map = new mapboxgl.Map({
   zoom: 13.5 // starting zoom
 });
 
-
-// when the map is done loading
-map.on('load', () => {
-
-    // request our GEOJSON data
-    d3.json('./data/bike_parking.geojson').then((parking) => {
-        // when loaded
-        // console.log(geojson);
-        addParking(parking);
-    });
-});
-
-function addParking(parking) {
-        // first add the source to the map
-        map.addSource('parking-data', {
+map.on('load', ()=> {
+    map.addSource('parking-data', {
         type: 'geojson',
-        data: parking // use our data as the data source
-        });
+        data: './data/bike_parking.geojson' // use our data as the data source
+    })
 
-        // add the GeoJSON data as a mapbox gl layer
-        map.addLayer({
-            'id': 'parking',
+    map.addLayer({
+        'id': 'parking',
             'type': 'circle',
             'source': 'parking-data',
             'paint': {
@@ -84,45 +70,50 @@ function addParking(parking) {
                 "circle-stroke-opacity": .5,
                 "circle-stroke-width": 2
             }
-        });
-
-};
-
-// when the map is done loading
-map.on('load', () => {
-
-    // request our GEOJSON data
-    d3.json('./data/bike_station.geojson').then((station) => {
-        // when loaded
-        console.log(station);
-        addStation(station);
     });
-});
 
-function addStation(station) {
-        // first add the source to the map
-        map.addSource('station-data', {
+    // first add the source to the map
+    map.addSource('station-data', {
         type: 'geojson',
-        data: station // use our data as the data source
-        });
+        data: './data/bike_station.geojson' // use our data as the data source
+    });
 
         // add the GeoJSON data as a mapbox gl layer
-        map.addLayer({
-            'id': 'station',
-            'type': 'circle',
-            'source': 'station-data',
-            'paint': {
+    map.addLayer({
+        'id': 'station',
+        'type': 'circle',
+        'source': 'station-data',
+        'paint': {
                 "circle-color": "#FFEA00",
                 "circle-radius": 6,
                 "circle-stroke-color": "#FFEA00",
                 "circle-stroke-opacity": .5,
                 "circle-stroke-width": 2
-            }
-        });
+        },
+    }); 
+});
 
-};
+const popup = new mapboxgl.Popup();
 
-map.addSource('nearest-station', {
+map.on('mousemove', (event) => {
+  const features = map.queryRenderedFeatures(event.point, {
+    layers: ['parking']
+  });
+  if (!features.length) {
+    popup.remove();
+    return;
+  }
+  const feature = features[0];
+
+  popup
+    .setLngLat(feature.geometry.coordinates)
+    .setHTML("<b>Bike Rack ID:</b> " + feature.properties.RackID)
+    .addTo(map);
+
+  map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+});
+
+/*map.addSource('nearest-station', {
   type: 'geojson',
   data: {
     type: 'FeatureCollection',
@@ -130,7 +121,15 @@ map.addSource('nearest-station', {
   }
 });
 
-const popup = new mapboxgl.Popup();
+/*map.addSource('nearest-station', {
+  type: 'geojson',
+  data: {
+    type: 'FeatureCollection',
+    features: []
+  }
+});
+
+/*const popup = new mapboxgl.Popup();
 
 map.on('mousemove', (event) => {
   const features = map.queryRenderedFeatures(event.point, {
@@ -149,7 +148,7 @@ map.on('mousemove', (event) => {
 
   map.getCanvas().style.cursor = features.length ? 'pointer' : '';
 });
-
+/*
 map.on('click', (event) => {
   // Return any features from the 'libraries' layer whenever the map is clicked
   const parkingFeatures = map.queryRenderedFeatures(event.point, {
@@ -189,6 +188,7 @@ map.on('click', (event) => {
     'stations'
   );
 });
+*/
 
 </script>
 
