@@ -1,0 +1,205 @@
+{
+  "type" : "FeatureCollection",
+  "features" : [
+    {
+      "type" : "Feature",
+      "id" : 4,
+      "geometry" : {
+        "type" : "Point",
+        "coordinates" : [
+          -84.507313282155266,
+          38.032713706410462
+        ]
+      },
+      "properties" : {
+        "OBJECTID" : 4,
+        "CampusCode" : "LM",
+        "BicycleFeatureID" : "BF0006",
+        "BicycleFeatureType" : "Do-It-Yourself Repair",
+        "LocationDisplay" : "Inside Campus Boundary",
+        "Label" : "DIY",
+        "Link" : null,
+        "Comment" : null,
+        "GlobalID" : "{3546F236-3741-4A9E-BFE6-5DF88DB49470}",
+        "Description" : "Rose Street Garage",
+        "GridName" : "n08e20sw12cI05",
+        "MapDisplay" : "Yes"
+      }
+    },
+    {
+      "type" : "Feature",
+      "id" : 5,
+      "geometry" : {
+        "type" : "Point",
+        "coordinates" : [
+          -84.501533830709761,
+          38.032359047450946
+        ]
+      },
+      "properties" : {
+        "OBJECTID" : 5,
+        "CampusCode" : "LM",
+        "BicycleFeatureID" : "BF0007",
+        "BicycleFeatureType" : "Do-It-Yourself Repair",
+        "LocationDisplay" : "Inside Campus Boundary",
+        "Label" : "DIY",
+        "Link" : null,
+        "Comment" : null,
+        "GlobalID" : "{5782DBC0-AEDE-42C7-9AF4-27CC1681761A}",
+        "Description" : "Rose Street Garage",
+        "GridName" : "n08e20sw12dC05",
+        "MapDisplay" : "Yes"
+      }
+    },
+    {
+      "type" : "Feature",
+      "id" : 6,
+      "geometry" : {
+        "type" : "Point",
+        "coordinates" : [
+          -84.503789436968503,
+          38.028070479862038
+        ]
+      },
+      "properties" : {
+        "OBJECTID" : 6,
+        "CampusCode" : "LM",
+        "BicycleFeatureID" : "BF0008",
+        "BicycleFeatureType" : "Do-It-Yourself Repair",
+        "LocationDisplay" : "Inside Campus Boundary",
+        "Label" : "DIY",
+        "Link" : null,
+        "Comment" : null,
+        "GlobalID" : "{4E3DB52B-B439-47AB-9B8A-128343F35D56}",
+        "Description" : "BCTC",
+        "GridName" : "n08e20sw12dB09",
+        "MapDisplay" : "Yes"
+      }
+    },
+    {
+      "type" : "Feature",
+      "id" : 7,
+      "geometry" : {
+        "type" : "Point",
+        "coordinates" : [
+          -84.50458406930376,
+          38.024854615721118
+        ]
+      },
+      "properties" : {
+        "OBJECTID" : 7,
+        "CampusCode" : "LM",
+        "BicycleFeatureID" : "BF0009",
+        "BicycleFeatureType" : "Do-It-Yourself Repair",
+        "LocationDisplay" : "Inside Campus Boundary",
+        "Label" : "DIY",
+        "Link" : null,
+        "Comment" : null,
+        "GlobalID" : "{A4FD9189-12B0-4A47-9647-4BFBBB22C09C}",
+        "Description" : "Johnson Center",
+        "GridName" : "n08e20sw13bA02",
+        "MapDisplay" : "Yes"
+      }
+    },
+    {
+      "type" : "Feature",
+      "id" : 8,
+      "geometry" : {
+        "type" : "Point",
+        "coordinates" : [
+          -84.502267481451923,
+          38.040968532102958
+        ]
+      },
+      "properties" : {
+        "OBJECTID" : 8,
+        "CampusCode" : "LM",
+        "BicycleFeatureID" : null,
+        "BicycleFeatureType" : "Do-It-Yourself Repair",
+        "LocationDisplay" : "Inside Campus Boundary",
+        "Label" : "DIY",
+        "Link" : null,
+        "Comment" : null,
+        "GlobalID" : "{C3596D13-FF48-4D66-BE9E-AE4F95A92F46}",
+        "Description" : "Patterson Drive",
+        "GridName" : null,
+        "MapDisplay" : "Yes"
+      }
+    },
+    {
+      "type" : "Feature",
+      "id" : 9,
+      "geometry" : {
+        "type" : "Point",
+        "coordinates" : [
+          -84.508838969504282,
+          38.029056271080456
+        ]
+      },
+      "properties" : {
+        "OBJECTID" : 9,
+        "CampusCode" : "LM",
+        "BicycleFeatureID" : null,
+        "BicycleFeatureType" : "Do-It-Yourself Repair",
+        "LocationDisplay" : "Inside Campus Boundary",
+        "Label" : "DIY",
+        "Link" : null,
+        "Comment" : null,
+        "GlobalID" : "{6EDC5A68-D8C9-4CCC-8191-41B1FC1C1A79}",
+        "Description" : "Medical Center",
+        "GridName" : null,
+        "MapDisplay" : "Yes"
+      }
+    },
+    {
+      "type" : "Feature",
+      "id" : 10,
+      "geometry" : {
+        "type" : "Point",
+        "coordinates" : [
+          -84.50414697121883,
+          38.033682388508346
+        ]
+      },
+      "properties" : {
+        "OBJECTID" : 10,
+        "CampusCode" : "LM",
+        "BicycleFeatureID" : null,
+        "BicycleFeatureType" : "Do-It-Yourself Repair",
+        "LocationDisplay" : "Inside Campus Boundary",
+        "Label" : "DIY",
+        "Link" : null,
+        "Comment" : null,
+        "GlobalID" : "{A0212C35-9BEE-4AFE-B891-6D440D8C2F86}",
+        "Description" : "Medical Center",
+        "GridName" : null,
+        "MapDisplay" : "Yes"
+      }
+    },
+    {
+      "type" : "Feature",
+      "id" : 11,
+      "geometry" : {
+        "type" : "Point",
+        "coordinates" : [
+          -84.503890926613906,
+          38.03860656744245
+        ]
+      },
+      "properties" : {
+        "OBJECTID" : 11,
+        "CampusCode" : "LM",
+        "BicycleFeatureID" : "BF0004",
+        "BicycleFeatureType" : "Do-It-Yourself Repair",
+        "LocationDisplay" : "Inside Campus Boundary",
+        "Label" : "DIY",
+        "Link" : null,
+        "Comment" : null,
+        "GlobalID" : "{2DDCD9D4-1B2F-4386-A19A-D022393A92E2}",
+        "Description" : "Blazer Dining",
+        "GridName" : "n08e20sw12bA10",
+        "MapDisplay" : "Yes"
+      }
+    }
+  ]
+}

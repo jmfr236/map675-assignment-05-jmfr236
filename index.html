@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>Plant Hardiness Zone Map</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <link href="https://api.mapbox.com/mapbox-assembly/v0.24.0/assembly.min.css" rel="stylesheet">
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.1/mapbox-gl.css' rel='stylesheet' />
+  <link href='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' rel='stylesheet' />
+
+    <style>
+        body {
+            margin:0;
+            padding:0;
+        }
+    </style>
+</head>
+<body>
+
+<div class='grid bg-gray-dark absolute h-full w-full'>
+    <div class='col col--12 border-b border--white color-white'>
+        <h1 class='txt-h2 mx36 my24 inline-block'>Plant Hardiness Zone Map</h1>
+        <p class='fr mr24 mt36'>Source: <a class='link' target='_blank' href='http://www.prism.oregonstate.edu/projects/plant_hardiness_zones.php'>USDA Plant Hardiness Zone GIS Datasets</a></p>
+    </div>
+    <div class='col col--12 h-full relative'>
+        <div id='map' class='w-full h-full'></div>
+        <div id='legend' class='w180 bg-white absolute top right mt18 mr18 round shadow-darken10 px12 py12 txt-s none'>
+            <strong class='block mb6 txt-l'>Zones</strong>
+            <ul class='ul mb6'></ul>
+        </div>
+    </div>
+</div>
+
+<script async defer src="https://api.mapbox.com/mapbox-assembly/v0.24.0/assembly.js"></script>
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.1/mapbox-gl.js'></script>
+<script src="https://d3js.org/d3.v6.min.js"></script>
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
+<script src='https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
+<script>
+
+const parkingOption = {
+        fillColor: '#ffcc00',
+        fillOpacity: .9,
+        color: '#ff9900',
+        weight: 1.75,
+}
+
+mapboxgl.accessToken = 'pk.eyJ1Ijoiam1mcjIzNiIsImEiOiJja3c0Yzg5MWw4dHdvMzFzMXI2bGw0Z28wIn0.h1s6bozXOvBTStSlxGe0LA';
+const map = new mapboxgl.Map({
+  container: 'map', // container id
+  style: 'mapbox://styles/mapbox/light-v10', // stylesheet location
+  center: [-84.5, 38.025], // starting position
+  zoom: 13.5 // starting zoom
+});
+
+
+// when the map is done loading
+map.on('load', () => {
+
+    // request our GEOJSON data
+    d3.json('./data/bike_parking.geojson').then((parking) => {
+        // when loaded
+        // console.log(geojson);
+        addParking(parking);
+    });
+});
+
+function addParking(parking) {
+        // first add the source to the map
+        map.addSource('parking-data', {
+        type: 'geojson',
+        data: parking // use our data as the data source
+        });
+
+        // add the GeoJSON data as a mapbox gl layer
+        map.addLayer({
+            'id': 'parking',
+            'type': 'circle',
+            'source': 'parking-data',
+            'paint': {
+                "circle-color": "#304FFE",
+                "circle-radius": 4,
+                "circle-stroke-color": "#304FFE",
+                "circle-stroke-opacity": .5,
+                "circle-stroke-width": 2
+            }
+        });
+
+};
+
+// when the map is done loading
+map.on('load', () => {
+
+    // request our GEOJSON data
+    d3.json('./data/bike_station.geojson').then((station) => {
+        // when loaded
+        console.log(station);
+        addStation(station);
+    });
+});
+
+function addStation(station) {
+        // first add the source to the map
+        map.addSource('station-data', {
+        type: 'geojson',
+        data: station // use our data as the data source
+        });
+
+        // add the GeoJSON data as a mapbox gl layer
+        map.addLayer({
+            'id': 'station',
+            'type': 'circle',
+            'source': 'station-data',
+            'paint': {
+                "circle-color": "#FFEA00",
+                "circle-radius": 6,
+                "circle-stroke-color": "#FFEA00",
+                "circle-stroke-opacity": .5,
+                "circle-stroke-width": 2
+            }
+        });
+
+};
+
+map.addSource('nearest-station', {
+  type: 'geojson',
+  data: {
+    type: 'FeatureCollection',
+    features: []
+  }
+});
+
+const popup = new mapboxgl.Popup();
+
+map.on('mousemove', (event) => {
+  const features = map.queryRenderedFeatures(event.point, {
+    layers: ['parking', 'station']
+  });
+  if (!features.length) {
+    popup.remove();
+    return;
+  }
+  const feature = features[0];
+
+  popup
+    .setLngLat(feature.geometry.coordinates)
+    .setHTML(feature.properties.Name)
+    .addTo(map);
+
+  map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+});
+
+map.on('click', (event) => {
+  // Return any features from the 'libraries' layer whenever the map is clicked
+  const parkingFeatures = map.queryRenderedFeatures(event.point, {
+    layers: ['parking']
+  });
+  if (!parkingFeatures.length) {
+    return;
+  }
+  const parkingFeature = parkingFeatures[0];
+
+  // Using Turf, find the nearest station to parking clicked
+  const nearestStation = turf.nearest(parkingFeature, station);
+
+  // If a nearest parking is not found, return early
+  if (nearestStation === null) return;
+  // Update the 'nearest-parking' data source to include
+  // the nearest parking
+  map.getSource('nearest-station').setData({
+    type: 'FeatureCollection',
+    features: [nearestStation]
+  });
+
+  // Create a new circle layer from the 'nearest-parking' data source
+  if (map.getLayer('nearest-station')) {
+    map.removeLayer('nearest-station');
+  }
+  map.addLayer(
+    {
+      id: 'nearest-station',
+      type: 'circle',
+      source: 'nearest-station',
+      paint: {
+        'circle-radius': 12,
+        'circle-color': '#486DE0'
+      }
+    },
+    'stations'
+  );
+});
+
+</script>
+
+</body>
+</html>
