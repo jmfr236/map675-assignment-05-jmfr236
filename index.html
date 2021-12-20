@@ -65,8 +65,12 @@ mapboxgl.accessToken = 'pk.eyJ1Ijoiam1mcjIzNiIsImEiOiJja3c0Yzg5MWw4dHdvMzFzMXI2b
 const map = new mapboxgl.Map({
   container: 'map', // container id
   style: 'mapbox://styles/mapbox/light-v10', // stylesheet location
-  center: [-84.5, 38.025], // starting position
-  zoom: 13.5 // starting zoom
+  center: [-84.505, 38.027], // starting position
+  zoom: 13.5, // starting zoom
+  maxBounds: [
+    [-84.57, 37.99], // Southwest coordinates
+    [-84.45, 38.08] // Northeast coordinates
+  ]
 });
 
 map.on('mousemove', (e) => {
@@ -98,14 +102,16 @@ map.on('load', ()=> {
             }
     });
 
+
+
     // first add the source to the map
     map.addSource('station-data', {
         type: 'geojson',
         data: './data/bike_station.geojson' // use our data as the data source
-    });
+        });
 
         // add the GeoJSON data as a mapbox gl layer
-    map.addLayer({
+        map.addLayer({
         'id': 'station',
         'type': 'circle',
         'source': 'station-data',
@@ -117,7 +123,7 @@ map.on('load', ()=> {
                 "circle-stroke-width": 2
         },
     }); 
-
+ 
     map.addSource('nearest-station', {
         type: 'geojson',
         data: {
@@ -174,6 +180,19 @@ map.addControl(
         });
     },
     mapboxgl: mapboxgl
+    })
+);
+
+// Add geolocate control to the map.
+map.addControl(
+    new mapboxgl.GeolocateControl({
+    positionOptions: {
+    enableHighAccuracy: true
+    },
+    // When active the map will receive updates to the device's location as it changes.
+    trackUserLocation: true,
+    // Draw an arrow next to the location dot to indicate which direction the device is heading.
+    showUserHeading: true
     })
 );
 

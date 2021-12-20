@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@turf/nearest-point": "^6.5.0"
+    "@turf/nearest-point": "^6.5.0",
+    "maki": "^2.1.0"
   }
 }
