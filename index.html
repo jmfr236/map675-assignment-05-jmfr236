@@ -17,12 +17,32 @@
 </head>
 <body>
 
+    <style type="text/css">
+        #info {
+        display: table;
+        position: relative;
+        margin: 0px auto;
+        word-wrap: anywhere;
+        white-space: pre-wrap;
+        padding: 10px;
+        border: none;
+        border-radius: 3px;
+        font-size: 12px;
+        text-align: center;
+        color: #222;
+        background: #fff;
+        }
+        </style>
+
 <div class='grid bg-gray-dark absolute h-full w-full'>
+
     <div class='col col--12 border-b border--white color-white'>
         <h1 class='txt-h2 mx36 my24 inline-block'>Plant Hardiness Zone Map</h1>
         <p class='fr mr24 mt36'>Source: <a class='link' target='_blank' href='http://www.prism.oregonstate.edu/projects/plant_hardiness_zones.php'>USDA Plant Hardiness Zone GIS Datasets</a></p>
     </div>
+
     <div class='col col--12 h-full relative'>
+        <div id="info"></div>
         <div id='map' class='w-full h-full'></div>
         <div id='legend' class='w180 bg-white absolute top right mt18 mr18 round shadow-darken10 px12 py12 txt-s none'>
             <strong class='block mb6 txt-l'>Zones</strong>
@@ -36,14 +56,10 @@
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script src='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
 <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
-<script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css" type="text/css">
 
-const parkingOption = {
-        fillColor: '#ffcc00',
-        fillOpacity: .9,
-        color: '#ff9900',
-        weight: 1.75,
-}
+<script>
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoiam1mcjIzNiIsImEiOiJja3c0Yzg5MWw4dHdvMzFzMXI2bGw0Z28wIn0.h1s6bozXOvBTStSlxGe0LA';
 const map = new mapboxgl.Map({
@@ -51,6 +67,16 @@ const map = new mapboxgl.Map({
   style: 'mapbox://styles/mapbox/light-v10', // stylesheet location
   center: [-84.5, 38.025], // starting position
   zoom: 13.5 // starting zoom
+});
+
+map.on('mousemove', (e) => {
+document.getElementById('info').innerHTML =
+// `e.point` is the x, y coordinates of the `mousemove` event
+// relative to the top-left corner of the map.
+JSON.stringify(e.point) +
+'<br />' +
+// `e.lngLat` is the longitude, latitude geographical position of the event.
+JSON.stringify(e.lngLat.wrap());
 });
 
 map.on('load', ()=> {
@@ -91,6 +117,14 @@ map.on('load', ()=> {
                 "circle-stroke-width": 2
         },
     }); 
+
+    map.addSource('nearest-station', {
+        type: 'geojson',
+        data: {
+            type: 'FeatureCollection',
+            features: []
+        }
+    });
 });
 
 const popup = new mapboxgl.Popup();
@@ -113,65 +147,64 @@ map.on('mousemove', (event) => {
   map.getCanvas().style.cursor = features.length ? 'pointer' : '';
 });
 
-/*map.addSource('nearest-station', {
-  type: 'geojson',
-  data: {
-    type: 'FeatureCollection',
-    features: []
-  }
-});
+map.addControl(
+    new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        
+        // Limit search results to US.
+        countries: 'us',
+        
+        // Use a bounding box to further limit results
+        // to the geographic bounds representing the
+        // region of Fayette County.
+        bbox: [-84.56, 37.98, -84.44, 38.08],
+        
+        // Apply a client-side filter to further limit results
+        // to those strictly within the New South Wales region.
+        filter: function (item) {
+            // returns true if item contains New South Wales region
+            return item.context.some((i) => {
+            // ID is in the form {index}.{id} per https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+            // This example searches for the `region`
+            // named `New South Wales`.
+            return (
+            i.id.split('.').shift() === 'place' &&
+            i.text === 'Lexington'
+            );
+        });
+    },
+    mapboxgl: mapboxgl
+    })
+);
 
-/*map.addSource('nearest-station', {
-  type: 'geojson',
-  data: {
-    type: 'FeatureCollection',
-    features: []
-  }
-});
-
-/*const popup = new mapboxgl.Popup();
-
-map.on('mousemove', (event) => {
-  const features = map.queryRenderedFeatures(event.point, {
-    layers: ['parking', 'station']
-  });
-  if (!features.length) {
-    popup.remove();
-    return;
-  }
-  const feature = features[0];
-
-  popup
-    .setLngLat(feature.geometry.coordinates)
-    .setHTML(feature.properties.Name)
-    .addTo(map);
-
-  map.getCanvas().style.cursor = features.length ? 'pointer' : '';
-});
-/*
-map.on('click', (event) => {
+/* map.on('click', (event) => {
   // Return any features from the 'libraries' layer whenever the map is clicked
   const parkingFeatures = map.queryRenderedFeatures(event.point, {
     layers: ['parking']
   });
+
+  const stationFeatures = map.queryRenderedFeatures(event.point, {
+    layers: ['station']
+  });
+
   if (!parkingFeatures.length) {
     return;
   }
   const parkingFeature = parkingFeatures[0];
 
-  // Using Turf, find the nearest station to parking clicked
-  const nearestStation = turf.nearest(parkingFeature, station);
+  // Using Turf, find the nearest hospital to library clicked
+  const nearestStation = turf.nearest(parkingFeature, stationFeatures);
 
-  // If a nearest parking is not found, return early
+  // If a nearest library is not found, return early
   if (nearestStation === null) return;
-  // Update the 'nearest-parking' data source to include
-  // the nearest parking
+  // Update the 'nearest-library' data source to include
+  // the nearest library
   map.getSource('nearest-station').setData({
     type: 'FeatureCollection',
-    features: [nearestStation]
+    features: [nearestHospital]
   });
 
-  // Create a new circle layer from the 'nearest-parking' data source
+  // Create a new circle layer from the 'nearest-library' data source
   if (map.getLayer('nearest-station')) {
     map.removeLayer('nearest-station');
   }
@@ -185,10 +218,9 @@ map.on('click', (event) => {
         'circle-color': '#486DE0'
       }
     },
-    'stations'
+    'station'
   );
-});
-*/
+});*/ 
 
 </script>
 

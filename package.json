@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@turf/nearest-point": "^6.5.0"
+  }
+}
