@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset='utf-8' />
-  <title>Plant Hardiness Zone Map</title>
+  <title>University of Kentucky | Bike Facility Map</title>
   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
   <link href="https://api.mapbox.com/mapbox-assembly/v0.24.0/assembly.min.css" rel="stylesheet">
   <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.1/mapbox-gl.css' rel='stylesheet' />
@@ -37,8 +37,8 @@
 <div class='grid bg-gray-dark absolute h-full w-full'>
 
     <div class='col col--12 border-b border--white color-white'>
-        <h1 class='txt-h2 mx36 my24 inline-block'>Plant Hardiness Zone Map</h1>
-        <p class='fr mr24 mt36'>Source: <a class='link' target='_blank' href='http://www.prism.oregonstate.edu/projects/plant_hardiness_zones.php'>USDA Plant Hardiness Zone GIS Datasets</a></p>
+        <h1 class='txt-h2 mx36 my24 inline-block'>UK Bicycle Facilities Map</h1>
+        <p class='fr mr24 mt36'>Source: <a class='link' target='_blank' href='https://www.uky.edu/transportation/bike'>UK Transportation Services - Bicycle Data</a></p>
     </div>
 
     <div class='col col--12 h-full relative'>
@@ -157,16 +157,16 @@ map.addControl(
         // Use a bounding box to further limit results
         // to the geographic bounds representing the
         // region of Fayette County.
-        bbox: [-84.56, 37.98, -84.44, 38.08],
+        bbox: [-84.52, 38, -84.48, 38.05],
         
         // Apply a client-side filter to further limit results
         // to those strictly within the New South Wales region.
         filter: function (item) {
-            // returns true if item contains New South Wales region
+            // returns true if item contains Lexington place
             return item.context.some((i) => {
             // ID is in the form {index}.{id} per https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
-            // This example searches for the `region`
-            // named `New South Wales`.
+            // This example searches for the `place`
+            // named `Lexington`.
             return (
             i.id.split('.').shift() === 'place' &&
             i.text === 'Lexington'
